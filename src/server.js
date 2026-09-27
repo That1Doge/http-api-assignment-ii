@@ -40,7 +40,7 @@ const parseBody = (request,response,handler) => {
 
         try {
             request.body = JSON.parse(bodyString);
-        } catch (e) {
+        } catch {
             request.body = {};
         }
 
