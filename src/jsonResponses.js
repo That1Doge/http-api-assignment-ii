@@ -65,7 +65,7 @@ const addUser = (request,response) => {
     }
 
     users[name].name = name;
-    users[age].age = age;
+    users[name].age = age;
 
     if(responseCode ===201) {
         return respondJSON(request,response,201,users[name]);

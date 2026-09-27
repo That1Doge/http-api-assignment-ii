@@ -5,7 +5,58 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
-
+    const handleResponse = (response, method) => {
+      const content = document.getElementById('content');
+      content.innerHTML = '';
+ 
+      const statusParagraph = document.createElement('p');
+      statusParagraph.textContent = `Status Code: ${response.status}`;
+      content.appendChild(statusParagraph);
+ 
+      // HEAD requests have no body to parse
+      if (method === 'HEAD') {
+        return Promise.resolve();
+      }
+ 
+      return response.json().then((data) => {
+        const pre = document.createElement('pre');
+        pre.textContent = JSON.stringify(data);
+        content.appendChild(pre);
+      });
+    };
+ 
+    const sendGetOrHead = (e) => {
+      e.preventDefault();
+ 
+      const selectedUrl = document.getElementById('urlField').value;
+      const method = document.getElementById('methodSelect').value.toUpperCase();
+ 
+      fetch(selectedUrl, { method })
+        .then((response) => handleResponse(response, method))
+        .catch((err) => console.error(err));
+    };
+ 
+    const sendAddUser = (e) => {
+      e.preventDefault();
+ 
+      const name = document.getElementById('nameField').value;
+      const age = document.getElementById('ageField').value;
+ 
+      fetch('/addUser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, age }),
+      })
+        .then((response) => handleResponse(response, 'POST'))
+        .catch((err) => console.error(err));
+    };
+ 
+    const init = () => {
+      document.getElementById('userForm').addEventListener('submit', sendGetOrHead);
+      document.getElementById('nameForm').addEventListener('submit', sendAddUser);
+    };
+ 
+    window.onload = init;
   </script>
 </head>
 <body>
